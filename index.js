@@ -8,6 +8,9 @@ app.get('/', (req, res) => {
 
 app.post('/chat', async (req, res) => {
   const { message } = req.body;
+  console.log('Received message:', message);
+  console.log('API Key exists:', !!process.env.ANTHROPIC_API_KEY);
+  
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -23,8 +26,10 @@ app.post('/chat', async (req, res) => {
       })
     });
     const data = await response.json();
+    console.log('Claude response:', JSON.stringify(data));
     res.json({ reply: data.content[0].text });
   } catch (error) {
+    console.log('Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 });
