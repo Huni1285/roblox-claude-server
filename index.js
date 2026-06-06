@@ -4,7 +4,6 @@ app.use(express.json());
 
 app.post('/chat', async (req, res) => {
   const { message } = req.body;
-
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -19,14 +18,12 @@ app.post('/chat', async (req, res) => {
         messages: [{ role: 'user', content: message }]
       })
     });
-
     const data = await response.json();
     res.json({ reply: data.content[0].text });
-
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: error.message });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log('Server running on port ' + PORT));
